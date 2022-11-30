@@ -1,7 +1,7 @@
 [Aloha的笔记]()
 
 # 前端
- 
+
 ## 框架
 
 ### vue
@@ -321,6 +321,26 @@ $event？？？这个
 
 
 #### template标签不能v-for
+
+
+
+#### vue中@click.native的使用
+
+怎么理解这一个native呢
+你可以这么理解
+一般的div button a 这些标签都是html原生有的，
+但是呢，如果你用vue，又使用了组件，
+那么你创建的那个组件是不是需要<xxx></xxx>这样子写呢，那么他就是不是原生标签了，
+那么在这里绑定原生的事件是无效的。
+因为vue组件不是走原生标签那一套的。（因为vue有自己事件运行机制，子组件son不是原生DOM元素，我们是无法直接给其绑定原生事件并触发的）
+
+
+需求，就是在自定义的组件标签上面绑定原生的事件，例如click事件这些，
+那么就可以直接使用click.native="func"
+
+也可以通过子传父的$emit方式绑定自定义的事件。
+
+![](C:\Users\lovelife_xu\Desktop\笔记总结\笔记图片\Snipaste_2022-11-25_15-04-19.png)
 
 
 
@@ -4057,6 +4077,58 @@ NodeJs开发者建议导出对象用module.exports,导出多个方法和变量�
 
 
 
+## Nginx
+
+什么是nginx？
+
+​		Nginx是一个 轻量级/高性能的反向代理**Web服务器**，他实现非常高效的反向代理、负载平衡，他可以处理2-3万并发连接数，官方监测能支持5万并发，现在中国使用nginx网站用户有很多，例如：新浪、网易、 腾讯等。
+
+Nginx的应用场景
+
+1. http服务器：Nginx是一个http服务可以独立提供http服务。可以做网页静态服务器。
+2. 虚拟主机：可以实现在一台服务器虚拟出多个网站。例如个人网站使用的虚拟主机。基于端口的，不同的端口；基于域名的，不同域名
+3. 反向代理，负载均衡：当网站的访问量达到一定程度后，单台服务器不能满足用户的请求时，需要用多台服务器集群可以使用nginx做反向代理。并且多台服务器可以平均分担负载，不会因为某台服务器负载高宕机而某台服务器闲置的情况。
+
+### 正向代理
+
+
+
+在如今的网络环境下，如果我们需要**梯子**到外网查资料，那么这个梯子就是正向代理的意思。
+
+**正向代理最大的特点是客户端明确要访问的服务器地址**；服务器只清楚请求来自哪个代理服务器，而不清楚来自哪个具体的客户端；**正向代理模式屏蔽或者隐藏了真实客户端信息。**
+
+**正向代理就是客户端明确知道需要访问的目标网站，通过正向代理让正向代理的服务器去访问这个网站，再把服务器请求转交给客户端。**
+
+**正向代理，"它代理的是客户端，代客户端发出请求"**
+
+正向代理的用途：
+（1）访问原来无法访问的资源，如Google
+（2） 可以做缓存，加速访问资源
+（3）对客户端访问授权，上网进行认证
+（4）代理可以记录用户访问记录（上网行为管理），对外隐藏用户信息
+
+### 反向代理
+
+这一个图片就可以明白什么叫做反向代理了。
+
+![img](https://images2018.cnblogs.com/blog/1202586/201804/1202586-20180406175939873-925019958.png)
+
+多个客户端给服务器发送的请求，Nginx服务器接收到之后，按照一定的规则分发给了后端的业务处理服务器进行处理了。此时~请求的来源也就是客户端是明确的，但是请求具体由哪台服务器处理的并不明确了，Nginx扮演的就是一个反向代理角色。
+
+反向代理，"**它代理的是服务端，代服务端接收请求**"，主要用于服务器集群分布式部署的情况下，反向代理隐藏了服务器的信息。
+
+反向代理的作用：
+（1）保证内网的安全，通常将反向代理作为公网访问地址，Web服务器是内网
+（2）负载均衡，通过反向代理服务器来优化网站的负载
+
+
+
+
+
+参考链接：https://www.cnblogs.com/wcwnina/p/8728391.html
+
+
+
 ## pm2
 
 ### pm2 常用命令行
@@ -5016,6 +5088,24 @@ formatDate(oldDate) {
 
 },
 ```
+
+
+
+## 工具安装
+
+git 安装流程
+https://blog.csdn.net/weixin_47638941/article/details/120632890
+
+nvm切换nodejs版本
+https://blog.csdn.net/weixin_44132277/article/details/124345575
+
+git可视化界面 小乌龟
+https://blog.csdn.net/qq_52719788/article/details/124766040
+
+GitLens
+可以把git修改的记录直接显示在行后面
+
+
 
 
 
@@ -6282,6 +6372,66 @@ const objectUrl = URL.createObjectURL(blob);
 
 
 
+
+# WEBPACK
+
+什么是webpack？
+
+webpack可以理解为打包工具 代码兼容 代码优化 附属功能。
+
+
+
+webpack做了什么？
+
+webpack有什么用？
+
+热更新原理？  https://juejin.cn/post/6844904008432222215#heading-9
+
+loader 、 plugins  、 入口  、 出口
+
+plugins  插件 这就是做一些loader不能做的  
+
+"eslint-plugin-import": "^2.20.2",
+
+  "eslint-plugin-node": "^11.1.0",
+
+  "eslint-plugin-prettier": "^3.1.3",
+
+  "eslint-plugin-promise": "^4.2.1",
+
+  "eslint-plugin-standard": "^4.0.0",
+
+  "eslint-plugin-vue": "^6.2.2",
+
+loader 也分很多loader  sass-loader 、 css-loader 、 
+
+
+
+简单来说就是 在webpack.config.js 里面设置配置，例如：入口 可以设置自定义的入口 入口名字  ，也可以多个入口 。
+
+
+
+loader 
+
+test 是目标文件  就是对哪一些文件是使用（use）哪一些loader
+
+```js
+ rules: [
+      { test: /\.css$/, use: 'css-loader' },
+      { test: /\.ts$/, use: 'ts-loader' }
+    ]
+```
+
+
+
+ plugins   直接new     插件是需要new出实例的  因为他是以发布监听这样的模式  或者说 广播吧  所以需要监听 。
+
+```javascript
+ plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+```
 
 
 

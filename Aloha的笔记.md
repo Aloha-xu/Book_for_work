@@ -344,11 +344,34 @@ $event？？？这个
 
 
 
+#### vue config配置 跨域
+
+```
+ '/sms': {
+    target:'xxxx', //代理到的目标
+    changeOrigin: true, //是否允许跨越
+    pathRewrite: {
+      '^/sms': '' //重写,
+    }
+  },
+ 
+ 接口那边的url : /sms/student/noToken/saveInfo
+ 
+ pathRewrite: {'^/sms': ''}//路径重写
+ 就是匹配到的路径/sms 就替换为空
+ 
+ 所以 接口那里url就需要/sms/student/noToken/saveInfo的 sms ，是用来匹配的,用于触发这个代理的。
+```
+
+
+
 
 
 ### ElementUI
 
 
+
+#### Message
 
 element 的Message这样的组件，有两种方式可以引入使用，
 
@@ -369,6 +392,26 @@ Message({message: xxxxx | string | vnode ,type: 'warning' | string })
 
 this.$message({messgae:string|vnode,type:string})
 ```
+
+
+
+#### upload
+
+elementui的upload组件  他是没有事件的，全都是props进行传参。
+
+举个例子 ：
+
+：on-success = 这里可以赋值一个func   但是 不能  ：on-success =  func（）  这样写，这样写就会直接触发这个方法了。
+
+简单来说就是upload只有props传值，没有绑定事件。就是说是不能传参的，也不能拿到$event这些属性。
+
+如果需要做一些传参的，只可以在upload外面自己包一层组件了。
+
+
+
+如果你使用http-request重写上传的方法，那么action就可以不用给他赋值，但是还是要有action。
+
+upload   如果重写了http-request  那么上传成功的on-sucess/error这些方法是不会自动触发的，需要你在重写的方法里面 通过拿到的参数（自己定义的那个方法有默认回传的参数的，参数名字随便起）手动调用onSuccess方法，然后在onsccess方法里面给list push进去，这样就不会出现闪一下的问题，闪一下的问题就是因为push进去的数据格式有问题（你需要push进去他这些事件返回的file），如果需要加一些其他字段进去，那就在onsuucess方法里面object.assign（）一下，加进去，这样就不会闪了。
 
 
 
@@ -2430,29 +2473,24 @@ while (1 == 1) {
 
 ## CSS
 
+#### **box-sizing **
 
+**box-sizing：content-box|border-box|inherit**
 
-一些选择器  nth-child  last-child 
+| content-box | 默认值。如果你设置一个元素的宽为 100px，那么这个元素的内容区会有 100px 宽，并且任何边框和内边距的宽度都会被增加到最后绘制出来的元素宽度中。 |
+| :---------- | ------------------------------------------------------------ |
+| border-box  | 告诉浏览器：你想要设置的边框和内边距的值是包含在 width 内的。也就是说，如果你将一个元素的 width 设为 100px，那么这 100px 会包含它的 border 和 padding，内容区的实际宽度是 width 减 去(border + padding) 的值。大多数情况下，这使得我们更容易地设定一个元素的宽高。 **注：**border-box 不包含 margin。 |
+| inherit     | 指定 box-sizing 属性的值，应该从父元素继承                   |
 
-圆角 border-radius
+content-box  就是如果你标签有padding border 的话，那么实际标签的宽度是 标签的width + padding + border 
 
-渐变   linear-gradient：线性渐变
-
-文字的一些属性  阴影 overflow shadow   
-
-背景也一样
-
-transition 过渡  transform 转换  animation 动画
-
-`flex`弹性布局、`Grid`栅格布局
+border-box  在上述条件一样的情况下，你width是多少那么显示的就是多少了。
 
 
 
+#### 为什么不给body html 设置100vh高度
 
-
-CommonJS 规范的核心变量: exports、module.exports、require；
-
-ES module export import
+那为什么要设置基于百分比的 height，而不改用 vh 单位呢？问题就在于 vh 单元在移动设备上无法正常工作；100vh 将占据超过 100% 的屏幕空间，因为移动浏览器会在浏览器 UI 出现和消失的地方做这件事。
 
 
 
@@ -2479,26 +2517,57 @@ https://blog.csdn.net/Alive_m/article/details/127603493
 //就在需要处理很长文字的标签上面写一个动态class，给他添加一个自己名命的clss（.over-long-title），然后css里面就连写，如下：
 /deep/ {
   .over-long-title.van-cell {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 5px;
-  }
-  .over-long-title {
-    .van-cell__title {
-      margin-right: 0px;
-      margin-bottom: 5px;
-      flex-basis: unset;
-      width: 100%;
-    }
-    .van-field__label {
-      width: 100%;
-      margin-bottom: 10px;
-    }
+    xxxxxxx
   }
 }
 ```
 
+一些其他css选择器
 
+https://blog.csdn.net/dxnn520/article/details/124168144
+
+```
+1、>(大于号) 子元素选择器
+>大于号的意思是 选择某元素后面的第一代子元素
+
+<style type="text/css">
+	h1>strong {
+		color: red;
+	}
+</style>
+ 
+<body>
+	<h1>
+		<strong>一代子元素</strong>
+	</h1>
+	<h1>
+		<span>
+			<strong>二代子元素</strong>
+		</span>
+	</h1>
+</body>
+
+2、~（波浪号）
+~波浪号的意思是 选取 某个元素之后的所有相同元素
+
+.box~h2 这句就是 选取 .box 后面所有的 h2
+
+这个选择器 两种元素必须处于同一个父元素内，被选取的元素不必直接紧随。
+
+<style type="text/css">
+	.box~h2{
+		background: aqua;
+	}
+</style>
+ 
+<body>
+	<div class="box"></div>
+	<h2>1</h2>
+	<em>2</em>
+	<h2>3</h2>
+	<h2>4</h2>
+</body>
+```
 
 
 
@@ -3192,28 +3261,6 @@ BOM 指的是浏览器对象模型 ， 提供一些属性和方法可以操作�
 同源的概念 协议 ip 端口 要相同  
 
 同源出现的原因是，为了安全，防止一些攻击，例如：你不小心触发了非法分子的陷阱，向非法分子的服务器发送一个请求，这个请求可能拿着你被偷的数据，这个时候同源就是出来了，浏览器不允许发送不同源的请求，就是说浏览器不允许你发送不在你规定好了的访问里面的请求。
-
-
-
-语义化标签  foot head aside
-
-拖拽api
-
-websocket   是一种协议 长连接 发送请求的时候多 Upgrade: websocket、Connection: Upgrade 。。。字段，
-
- 定位
-
- 画布 
-
-input表单一些属性  autofocus 自动填充 pleacher
-
-audio video 标签
-
-数据本地存储  localstorage sessionstorage
-
-history api        go--（可以是 -1   0  +5）    back--退后   forward-向前
-
-
 
 
 
@@ -4788,6 +4835,72 @@ css:
 
 
 
+## 表单的请求数据类型 处理方法：
+
+```
+      三种都可以处理表单数据，一般就直接用后两者其一
+      
+      // const param = new URLSearchParams();
+      // Object.entries(config.data).forEach(item => {
+      //   param.append(item[0], item[1])
+      // })
+      // config.data = param
+
+      // config.transformRequest = [data => {
+      //   const formData = new FormData()
+      //   if (data) {
+      //     Object.entries(data).forEach(item => {
+      //       formData.append(item[0], item[1])
+      //     })
+      //   }
+      //   return formData
+      // }]
+
+      //const formData = new FormData()
+      //Object.entries(config.data).forEach(item => {
+      //  formData.append(item[0], item[1])
+      //})
+      //config.data = formData
+```
+
+
+
+```
+ransformRequest：
+表示允许在向服务器发送前，修改请求数据
+使用要求：
+1、只能用在 ‘PUT’, ‘POST’ 和 ‘PATCH’ 这几个请求方法
+2、后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream
+transformRequest: [function (data, headers) {
+    // 对 data 进行任意转换处理
+    return data;
+  }],
+
+transformResponse：
+在传递给 then/catch 前，允许修改响应数据
+transformResponse: [function (data) {
+    // 对 data 进行任意转换处理
+    return data;
+  }],
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # vscode快捷键
 
 折叠所有区域代码的快捷键：
@@ -5446,6 +5559,11 @@ export function _debounce(fn, delay) {
 }
 
 
+ 	   lllllllllllllllllllllll   可能这个时间段内你一直触发某个函数
+       |                     |
+       |（它到这里就触发了一个settimeout）到时候下一个函数执行的时候timer就有值了，return里面就清楚上一个，重新计时了
+
+
 使用vue指令实现防抖效果 
 这个指令是需要使用在button标签下的，因为只有button才有disabled属性
 import Vue from 'vue'
@@ -5504,6 +5622,12 @@ export default {
         addEventListener('scroll', _throttle(a, 1000))
     </script>
 </body>
+
+
+                     
+       lllllllllllllllllllllll   可能这个时间段内你一直触发某个函数（这个时间段就是delay）
+       |                     |
+                             |（它到这里才会触发一次）
 ```
 
 ```

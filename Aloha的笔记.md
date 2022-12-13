@@ -114,9 +114,9 @@ watch  每一次监听的对象   改变就会触发
 
 
 
-#### watch能监听computed的属性吗
+#### watch
 
-记得是可以的 但没必要
+第一次初始化的时候是不会触发handler里面的代码 watch也不能使用箭头函数
 
 
 
@@ -3192,7 +3192,13 @@ https://blog.csdn.net/qq_37600506/article/details/99487744
 
 
 
+#### flex-basis
 
+flex-basis  指定了 flex 元素在主轴方向上的初始大小
+
+```
+
+```
 
 
 
@@ -3277,6 +3283,16 @@ hash是通过#后面跟哈希值进行路由跳转  每一次修改#后面的url
 history url改变就会向服务器发送请求，所以需要后端配置一下，否者会404。
 
 history 没有# 好看一点  是通过history api进行路由控制的  go forward back等等方法。
+
+window.pre。 拿到浏览器的上一个路由地址
+
+
+
+### 获取URL地址
+
+document.referrer 获取上一页的来源地址
+
+document.URL 获取当前页面地址。URL必须大写
 
 
 
@@ -4892,6 +4908,90 @@ transformResponse: [function (data) {
 
 
 
+
+## qrcode组件     转义出来二维码图片
+
+https://blog.csdn.net/weixin_43840289/article/details/122595249
+
+
+
+## v-model小技巧
+
+v-model绑定的值，会自动补充到对象中，如果对象没有先写好这个变量。例如：
+
+```
+<el-input v-model="model.signTitle" placeholder="请输入签到主题" clearable></el-input>
+data里面已经定义了 model：{
+    //但是没有定义signTitle
+}
+这个时候可以这样写，只要input输入了xxxx，那么model：{
+    signTitle：xxxx
+}
+但是如果v-model=“signTitle” ，data有没有定义signTitle，按这样是会报错的。
+所以清除表单form的时候可以直接清除了赋值{}空对象
+```
+
+
+
+## let a = [{a:1},{a:2}]  变成  [1, 2]
+
+```
+[{a:1},{a:2}].map(({a})=>a)   这里使用map循环加上{}解构、箭头函数省略return关键字
+```
+
+
+
+## 使用vscode 1. 报在签出前,请清理储存库工作树. 2.拉取代码报错
+
+http://t.zoukankan.com/niluiquhz-p-14734281.html
+
+
+
+## h5调用微信api
+
+https://blog.csdn.net/nannanWEB/article/details/103493898
+
+
+
+## js捕获到除200之外的错误 怎么拿到返回的提示?
+
+接口返回的状态码不是200，就是除200之外的状态码，有一些提示他是返回200，但是有一些错误，所以就需要有逻辑判断，reject出去
+
+axios处理错误，默认行为是拒绝返回状态码不在2xx范围内的所有响应，并将其视为错误。
+
+直接在响应拦截拦截
+
+```
+axios.interceptors.response.use(
+  response => {//2xx走这
+    if (一些逻辑判断) {
+      return response
+    } else {
+      return Promise.reject(response.data.msg)
+    }
+  },
+  error => {//除了2xx之外的走这
+    if (error.response) {//逻辑判断
+      // 请求已发出，但服务器响应的状态码不在 2xx 范围内
+      return Promise.reject(error.response.data.msg)
+    } else {
+      return Promise.reject(error)
+    }
+  }
+)
+
+```
+
+
+
+## Prefix string too short报错 解决办法
+
+formData()对象去append文件类型的时候（file/blob），要注意如果出现上传的文件名字是很短的，那么后端使用了一些类可能会报Prefix string too short，这个时候你就需要在append进去的时候，给append写第三个参数，这个参数是文件的名字。
+
+```
+data.append("myfile", myBlob, "filename.txt");
+使用 append() 方法时，可以通过第三个可选参数设置发送请求的头 Content-Disposition 指定文件名。如果不指定文件名（或者不支持该参数时），将使用名字“blob”。
+```
 
 
 

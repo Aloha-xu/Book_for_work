@@ -363,6 +363,21 @@ $event？？？这个
  所以 接口那里url就需要/sms/student/noToken/saveInfo的 sms ，是用来匹配的,用于触发这个代理的。
 ```
 
+#### 过滤器 
+
+ vue3已经移除了过滤器，想要在vue3中做同样的效果只能用func或者computer处理数据了。
+
+过滤器一般是用来给数据进行一些简单的处理，大小写替换，加一个符号等等，
+
+```
+<!-- 在双花括号中 -->
+{{ message | capitalize }}
+
+<!-- 在 `v-bind` 中 -->
+<div v-bind:id="rawId | formatId"></div>
+<el-form-item :label="$t('common.new')|AddColon" prop="name">
+```
+
 
 
 
@@ -3259,6 +3274,67 @@ BOM 指的是浏览器对象模型 ， 提供一些属性和方法可以操作�
 用于在网页加载完毕后立刻执行的操作，即当 HTML 文档加载完毕后，立刻执行某个方法。
 
 用于 <body> 元素，在页面完全载入后(包括图片、css文件等等)执行脚本代码。
+
+
+
+#### mouseover 、mouseout 、 mouseenter 、mouseleave 
+
+```
+一、 mouseover 和mouseenter的区别
+
+mouseover: 只要鼠标指针移入事件所绑定的元素或其子元素，都会触发该事件
+mouseenter: 只有鼠标指针移入事件所绑定的元素时，才会触发该事件
+
+换句话说就是，如果一个元素没有子元素，那么该元素绑定mouseover或者mouseenter两种事件效果没有区别，鼠标每次移入元素时都只会触发一次事件；如果绑定了mouseover事件的元素存在子元素，那么，每次移入该元素时都会触发一次事件（包括从外部移入和从子元素移入），移入子元素时也会触发一次事件。
+
+一个是鼠标自动在绑定的元素或者子元素就可以触发，一个是必须移动在绑定的元素才能触发
+
+1、mouseover和mouseout会有事件冒泡，也就是说鼠标移入、移出当前元素的子元素或父元素时都会触发该事件。
+2、mouseenter和mouseleave 事件不会冒泡，依旧是说鼠标移入、移出时，单签元素的子元素或父元素不会触发该事件。
+
+
+二、事件传播的机制(冒泡和捕获), 使用代码来验证, 事件冒泡和事件捕获的区别
+
+事件捕获（event capturing）：当鼠标点击或者触发dom事件时，浏览器会从根节点开始由外到内进行事件传播，即点击了子元素，如果父元素通过事件捕获方式注册了对应的事件的话，会先触发父元素绑定的事件。
+事件冒泡（dubbed bubbling）：与事件捕获恰恰相反，事件冒泡顺序是由内到外进行事件传播，直到根节点
+
+事件冒泡： 多个元素嵌套，有层次关系，这些元素都注册了相同的事件，如果里面的元素的事件触发了， 外面的元素事件自动触发。由内向外。
+事件捕获： 多个元素嵌套，有层次关系，这些元素都注册了相同的事件，如果里面的元素的事件触发了， 外面的元素事件自动触发。由外向内。
+addEventListener("没有on的事件类型","事件处理函数","控制事件阶段") 事件控制阶段中 ：false：冒泡阶段 true：捕获阶段
+e.eventPhase 判断事件阶段(冒泡和捕获不能同时出现)
+
+三、阻止事件的默认行为, 事件冒泡和事件捕获可以阻止吗? 怎么阻止?
+阻止事件的传播：
+• 在W3c中，使用stopPropagation（）方法
+• 在IE下设置cancelBubble = true；
+在捕获的过程中stopPropagation（）；后，后面的冒泡过程也不会发生了~
+
+
+阻止事件的默认行为，例如click <a>后的跳转~
+• 在W3c中，使用preventDefault（）方法；
+• 在IE下设置window.event.returnValue = false;
+
+1.setInterval的 this指向
+setInterval的 this指向 是window
+2. 怎么设置自定义属性
+自定义属性：element.setAttributet("属性 ") 设置属性
+3.怎么阻止事件冒泡阻止事件冒泡： e.stopPropagation(); 谷歌火狐阻止事件冒泡的方法
+e.cancelBubble = true; IE8及以前版本浏览器阻止冒泡的方法
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

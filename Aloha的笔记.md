@@ -378,7 +378,33 @@ $event？？？这个
 <el-form-item :label="$t('common.new')|AddColon" prop="name">
 ```
 
+### Vant
 
+#### Overlay 遮罩层  vant 遮盖层    后面的内容会移动 应该是不能滚动的
+
+显示遮罩层时设置document.documentElement.style.overflowY = 'hidden';
+
+隐藏遮罩层时设置document.documentElement.style.overflowY = 'auto'; 
+
+
+
+#### Overlay 遮罩层  vant 遮盖层   遮罩层后面的页面 会重置到顶部
+
+显示遮罩层时设置     window.scrollTo(0, this.getScrollTop())
+
+```
+getScrollTop () {
+      let scrollTop = 0;
+      if (document.documentElement && document.documentElement.scrollTop) {
+        scrollTop = document.documentElement.scrollTop;
+      } else if (document.body) {
+        scrollTop = document.body.scrollTop;
+      }
+      return scrollTop;
+    }
+```
+
+#### 
 
 
 
@@ -427,6 +453,19 @@ elementui的upload组件  他是没有事件的，全都是props进行传参。
 如果你使用http-request重写上传的方法，那么action就可以不用给他赋值，但是还是要有action。
 
 upload   如果重写了http-request  那么上传成功的on-sucess/error这些方法是不会自动触发的，需要你在重写的方法里面 通过拿到的参数（自己定义的那个方法有默认回传的参数的，参数名字随便起）手动调用onSuccess方法，然后在onsccess方法里面给list push进去，这样就不会出现闪一下的问题，闪一下的问题就是因为push进去的数据格式有问题（你需要push进去他这些事件返回的file），如果需要加一些其他字段进去，那就在onsuucess方法里面object.assign（）一下，加进去，这样就不会闪了。
+
+
+
+####  ios el-select下拉框，要点两次才选中
+
+```
+/** ios el-select下拉框，要点两次才选中 */
+.el-scrollbar >.el-scrollbar__bar {
+    opacity: 1 !important;
+}
+
+要写在app.vue文件下 ，原生方式写样式
+```
 
 
 
@@ -2929,10 +2968,12 @@ display 值为：inline-block、table-cell、table-caption、flex等；
 
 ```
 span{
-        font-size: 10px; //为了一些可以12px一下的网站
-        -webkit-transform: scale(0.5);
+        font-size: 12px; //为了一些可以12px一下的网站
+        -webkit-transform: scale(0.5);//缩放比例
         display: inline-block; //transform需要块级元素
     }
+    
+    ==》font-size: 6px;
 ```
 
 
@@ -3215,6 +3256,43 @@ flex-basis  指定了 flex 元素在主轴方向上的初始大小
 
 ```
 
+#### CSS 背景图片 宽度100% 高度自适应
+
+```
+width: 100%;
+	height: 100%;
+	background-image: url("../../public/img/bg.png");
+	background-size: 100% auto;
+```
+
+
+
+#### vertical-align
+
+vertical-align 属性设置元素的垂直对齐方式。
+
+baseline	默认。元素放置在父元素的基线上。
+sub	垂直对齐文本的下标。
+super	垂直对齐文本的上标
+top	把元素的顶端与行中最高元素的顶端对齐
+text-top	把元素的顶端与父元素字体的顶端对齐
+middle	把此元素放置在父元素的中部。
+bottom	把元素的顶端与行中最低的元素的顶端对齐。
+text-bottom	把元素的底端与父元素字体的底端对齐。
+length	 
+%	使用 "line-height" 属性的百分比值来排列此元素。允许使用负值。
+inherit	规定应该从父元素继承 vertical-align 属性的值。
+
+```
+经常用在两个子标签的高度是不一样的，那么默认是底部靠最下面，如果这个时候需要居中，靠顶部的效果，就可以用这个
+```
+
+![http://114.132.239.118:3003/getpic/1672233754462.png](C:\Users\lovelife_xu\Desktop\笔记总结\笔记图片\Snipaste_2022-12-28_21-22-25.png)
+
+```
+还有就是图片和文字居中对齐
+```
+
 
 
 
@@ -3334,10 +3412,6 @@ e.cancelBubble = true; IE8及以前版本浏览器阻止冒泡的方法
 
 
 
-
-
-
-
 ## 同源 跨域
 
 同源的概念 协议 ip 端口 要相同  
@@ -3369,6 +3443,30 @@ window.pre。 拿到浏览器的上一个路由地址
 document.referrer 获取上一页的来源地址
 
 document.URL 获取当前页面地址。URL必须大写
+
+### h5在只能在微信中打开的限制
+
+```
+// var ua = navigator.userAgent.toLowerCase();
+  //       var isWeixin = ua.indexOf('micromessenger') != -1;
+  //       if (!isWeixin) {
+  //         if(to.fullPath =='/error'){
+  //           next();
+  //         }else{
+  //           next('/error')
+  //         }
+  //       }else{
+  //         next();
+  //       }
+  
+  可以写在路由守卫那
+```
+
+
+
+### window.replace('xxxxx') 重定向
+
+
 
 
 
@@ -3662,9 +3760,26 @@ arr2Map[item.id] && (result.push(item))
 
 
 
+### vue 里面使用 v-html 插入的文本不换行的问题解决
 
+```
+1、添加样式
+在使用 v-html 时添加样式，white-space:pre-wrap ,让浏览器保留空白和换行符。
 
+<p v-html="text" style="white-space:pre-wrap"></p>
 
+2、用 pre 标签包裹
+被包围在 pre 标签中的文本通常会保留空格和换行符。
+
+<pre><p v-html="text"></p></pre>
+
+3、正则替换
+用正则表达式把 \n 替换成
+这样 v-html 就可以识别
+
+<p v-html="text.replace(/\n/g,'<br/>')"></p>
+
+```
 
 
 
@@ -5070,6 +5185,19 @@ data.append("myfile", myBlob, "filename.txt");
 ```
 
 
+
+## html渲染富文本的文字
+
+```
+<div class="text" style="white-space: pre-wrap;" v-if="!isSoloOrAllCommont && commentAllText" v-html="commentAllText.replace(/\n/g,'<br/>')"></div>
+
+style="white-space: pre-wrap;" 让浏览器保留空格
+.replace(/\n/g,'<br/>')"  把换行变成br
+
+<pre class="text" style="white-space: pre-wrap;" v-if="!isSoloOrAllCommont && commentAllText" >{{commentAllText}}</pre>
+
+<pre>  替换v-html，v-html容易被注入。
+```
 
 
 
@@ -6737,3 +6865,6 @@ test 是目标文件  就是对哪一些文件是使用（use）哪一些loader
 
 
 
+# 坑
+
+写移动端就不要使用elementui   会有一些兼容的问题，ios兼容是真的麻烦。selector就是其一

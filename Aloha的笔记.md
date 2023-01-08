@@ -5658,6 +5658,118 @@ var regExp = new RegExp('(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)');
 
 
 
+正则匹配后一个是数字，并且倒数第二个位置是汉字，移除匹配到的随后的数字。
+
+```
+function clearLastNumber(value){
+    let chinaStr = value.substring(value.length - 2, value.length - 1)
+    let regExp = new RegExp('[\u4E00-\u9FA5]');
+    if (regExp.test(chinaStr)) {
+        return value.replace(/\d(?=\d?$)/g, "")
+    }else{
+        return value
+    }
+}
+
+
+console.log(clearLastNumber('EMI体育1'));
+console.log(clearLastNumber('化学B'));
+console.log(clearLastNumber('体育2（3-4）'));
+console.log(clearLastNumber('EMI体育3-4'));
+console.log(clearLastNumber('EMI体育'));
+
+/**
+ * 
+ *  EMI体育
+    化学B
+    体育2（3-4）
+    EMI体育3-4
+    EMI体育
+ * 
+ */
+
+```
+
+
+
+```
+function clearLastNumber(value){
+    //白名单
+    let white = {
+        '3D打印（校队）':'3D打印（校队）',
+        '棒球（周末集训班）':'棒球（周末集训班）',
+        '武术（长拳）':'武术（长拳）',
+        '综合实践（思维课）3-4':'综合实践（思维课）',
+        '3D打印与设计':'3D打印与设计',
+        'U10男子足球':'U10男子足球',
+        '乒乓球（校队）':'乒乓球（校队）',
+        '武术队（校队）':'武术队（校队）',
+        '活力啦啦操（校队）':'活力啦啦操（校队）',
+        '篮球队（校队）':'篮球队（校队）',
+        '美术创作工作室（校队）':'美术创作工作室（校队）',
+        '美术畅想（校队）':'美术畅想（校队）',
+        '英语加油站G3':'英语加油站G3',
+        '语文加油站G3':'语文加油站G3',
+        '语文训练营G3':'语文训练营G3',
+        '轮滑冰球（校队）':'轮滑冰球（校队）',
+    }
+
+    if(white[value]){
+        return white[value]
+    }else{
+        return value.replace(/[0-9_\s\+\-\(\)\（\）\&\/]/g, "")
+    }
+
+    // return value.replace(/[0-9_\s\+\-\(\)\（\）\&\/]/g, "").replace(/校队/g, "").replace(/周末集训班/g, "").replace(/长拳/g, "").replace(/思维课/g, "")
+
+    // let chinaStr = value.substring(value.length - 2, value.length - 1)
+    // let regExp = new RegExp('[\u4E00-\u9FA5]');
+    // if (regExp.test(chinaStr)) {
+    //     return value.replace(/\d(?=\d?$)/g, "")
+    // }else{
+    //     return value
+    // }
+}
+
+
+console.log(clearLastNumber('EMI体育1'));
+console.log(clearLastNumber('化学B'));
+console.log(clearLastNumber('体育2（3-4）'));
+console.log(clearLastNumber('体育2(3-4)'));
+console.log(clearLastNumber('EMI体育3-4'));
+console.log(clearLastNumber('EMI体育-6'));
+console.log(clearLastNumber('EMI体育-6&'));
+console.log(clearLastNumber('棒球（周末集训班）'));
+console.log(clearLastNumber('EMI体育  '));
+console.log(clearLastNumber('3D打印（校队）'));
+console.log(clearLastNumber('少儿篮球（1&2）'));
+console.log(clearLastNumber('棒球（周末集训班）'));
+console.log(clearLastNumber('武术（长拳）'));
+console.log(clearLastNumber('综合实践（思维课）3-4'));
+
+
+console.log(clearLastNumber('3D打印（校队）'));
+console.log(clearLastNumber('棒球（周末集训班）'));
+console.log(clearLastNumber('武术（长拳）'));
+console.log(clearLastNumber('综合实践（思维课）3-4'));
+console.log(clearLastNumber('3D打印与设计'));
+console.log(clearLastNumber('U10男子足球'));
+console.log(clearLastNumber('乒乓球（校队）'));
+console.log(clearLastNumber('武术队（校队）'));
+console.log(clearLastNumber('活力啦啦操（校队）'));
+console.log(clearLastNumber('篮球队（校队）'));
+console.log(clearLastNumber('美术创作工作室（校队）'));
+console.log(clearLastNumber('美术畅想（校队）'));
+console.log(clearLastNumber('英语加油站G3'));
+console.log(clearLastNumber('语文加油站G3'));
+console.log(clearLastNumber('语文训练营G3'));
+console.log(clearLastNumber('轮滑冰球（校队）'));
+```
+
+
+
+
+
 # 性能优化篇
 
 ## CDN

@@ -378,6 +378,26 @@ $event？？？这个
 <el-form-item :label="$t('common.new')|AddColon" prop="name">
 ```
 
+#### foreach里面如果使用splice连续的删数据，会导致splice只删了一条。
+
+```
+splice导致遍历的元素发生了变化，但是前面两次都没有什么问题。第三次的时候遍历的索引为2，删除该元素之后，后面还有一个num值为0的元素，这个元素的索引变为了2，但由于索引为2的元素已经遍历过了，因此遍历索引为3的元素，最后存在pub属性，因此产生了这个bug。
+
+总结：在vue里面虽然splice是响应式的，但是不建议与forEach连用，一般来讲forEach无法中断遍历，当需要过滤数据的时候还是采用filter比较好，需要修饰数组（不删减数组）的时候采用map遍历比较好。
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Vant
 
 #### Overlay 遮罩层  vant 遮盖层    后面的内容会移动 应该是不能滚动的
@@ -469,6 +489,12 @@ upload   如果重写了http-request  那么上传成功的on-sucess/error这些
 
 
 
+#### 解决Element表单回车提交会刷新页面的Bug
+
+https://blog.csdn.net/qq_52697994/article/details/127002246
+
+
+
 
 
 ### react
@@ -547,6 +573,45 @@ input {
   -moz-appearance: textfield;
 }
 ```
+
+
+
+### 使用 css 适配 iphoneX     （ 刘海屏   、 底部黑色的长条）
+
+```
+1）适配方案一：使用已知底部小黑条高度34px/68rpx来适配（不推荐）
+
+      
+（2）适配方案二：使用微信官方API，getSystemInfo()中的safeArea对象进行适配（推荐）
+
+       （3）适配方案三：使用苹果官方推出的css函数env()、constant()来适配 （推荐）
+       H5适配iPhoneX底部小黑条(Home Indicator)
+        · 适配方案：使用苹果官方推出的css函数env()、constant()来适配 （推荐）
+
+
+```
+
+https://blog.csdn.net/qq_39224266/article/details/105200198
+
+https://juejin.cn/post/6844904106088202254
+
+
+
+### vue 隐藏h5页面在微信端底部出现的白色导航条
+
+这个鬼东西 只有ios才会出现
+
+```
+使用微信的接口，关掉导航栏。没试过，不知道行不行
+使用replace，还得考虑back，有时候是需要history的，解决办法是replace的时候手动的加history了。
+
+```
+
+
+
+
+
+
 
 
 
@@ -5201,7 +5266,47 @@ style="white-space: pre-wrap;" 让浏览器保留空格
 
 
 
+## application/json-常见的post提交数据的方式
 
+```
+在http协议中规定了GET、HEAD、POST、PUT、DELETE、CONNECT 等请求方式,其中比较常用的就是post和get，其中post用来向服务器提交数据，post只规定了提交的数据必须放在请求的主体中，但是并没有规定传输数据的编码方式。比较主流的有如下的几种编码方式。
+
+1.application/x-www-form-urlencoded
+最常见的请求方式，特别是自己在测试后端接口时，经常在前端url中直接以键值对的形式写入参数的值。但是该方式默认采用URLencode编码会导致消息包大，form表单默认以该方式提交，请求一般是如下的方式：
+
+POST http://www.example.com HTTP/1.1
+Content-Type: application/x-www-form-urlencoded;charset=utf-8
+ 
+title=test&sub%5B%5D=1&sub%5B%5D=2&sub%5B%5D=3
+
+2.multipart/form-data
+也是比较常用的提交表单的方式，既可以上传键值对也可以上传文件，因为有boundary的隔离可以上传多个文件，举例如下：
+
+POST http://www.example.com HTTP/1.1
+Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA
+ 
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA
+Content-Disposition: form-data; name="text"
+ 
+title
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA
+Content-Disposition: form-data; name="file"; filename="chrome.png"
+Content-Type: image/png
+ 
+PNG ... content of chrome.png ...
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA--
+
+3.application/json
+application/json 这个 Content-Type 也是非常常见的，越来越多的人使用该方式传递，该方式传递的是序列化后的字符串，因为采用的是JSON格式的数据，因此支持更多复杂的类型。请求体一般如下：
+
+{
+    "username":"admin",
+    "password":"admin",
+}
+
+4.text/xml
+基于XML—PRC的编码方式，协议简单，功能页足够日常的使用JS也有类库使用，但是XML的格式还是过于臃肿，一般场景用JSON更为方便。
+```
 
 
 

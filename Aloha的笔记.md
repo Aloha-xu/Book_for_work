@@ -1606,7 +1606,25 @@ obj.myFunc([1,2,3])
 
 
 
+### 对象数组去重
 
+```
+innerTableData = [...new Set(innerTableData.map(t => JSON.stringify(t)))].map(s => JSON.parse(s))
+
+//要对对象数组进行去重，使用new set是需要stringify再进行去重。
+//这种方式的去重 好像有点问题 有时候去重不了，暂时不知道什么问题
+```
+
+https://www.freesion.com/article/294514021/
+
+```js
+array = array.reduce(function(cur,next){
+   obj[next.courseName] ? "" : obj[next.courseName] = true && cur.push(next);
+   return cur;
+ },[]);
+
+reduce递归函数
+```
 
 
 
@@ -5307,6 +5325,22 @@ application/json 这个 Content-Type 也是非常常见的，越来越多的人�
 4.text/xml
 基于XML—PRC的编码方式，协议简单，功能页足够日常的使用JS也有类库使用，但是XML的格式还是过于臃肿，一般场景用JSON更为方便。
 ```
+
+
+
+## 根据本地时间，返回一个指定的 [`Date`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date) 对象是在一周中的第几天（`0`-`6`），0 表示星期天。
+
+```
+new Date().getDay() 方法可返回一周（0~6）的某一天的数字。
+
+注意： 星期天为 0, 星期一为 1, 以此类推。
+```
+
+
+
+
+
+
 
 
 

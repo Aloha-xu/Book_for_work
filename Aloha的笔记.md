@@ -412,7 +412,17 @@ splice导致遍历的元素发生了变化，但是前面两次都没有什么�
 
 
 
+#### vue router传参
 
+除了router.push({ path: `/user/${username}` }) // -> /user/eduardo
+
+```
+// 命名的路由，并加上参数，让路由建立 url
+router.push({ name: 'user', params: { username: 'eduardo' } })  注意name是配置路由的name，而不是路径，也只能使用name
+
+// 带查询参数，结果是 /register?plan=private
+router.push({ path: '/register', query: { plan: 'private' } }) 注意
+```
 
 
 
@@ -449,6 +459,28 @@ getScrollTop () {
 ```
 
 #### 
+
+
+
+this.options.map is not a function"
+
+#### vant picker 无法通过ref获取到实例
+
+```
+情况：在设置picker的默认值时，需要使用$refs获取实例调用方法，但是一直不能获取到实列，而在弹出一次popup后就能获取到
+
+原因：第一次页面加载时没有加载popup的dom，vant的Popup组件有个lazy-render属性用于控制是否在第一次加载popup的dom，默认时不加载  vant传送点
+
+解决： 使用时增加属性 <van-popup  :lazy-render='false' />
+```
+
+
+
+picker自定义数据的时候秒如果适合用设置setcoumvalue（x，{xxx:xx,xxx:xx}）设置的值是对象，不知道为什么设置不了，就只能通过设置index来初始化了。
+
+
+
+
 
 
 
@@ -2321,6 +2353,10 @@ console.log(result) // { name: 'cherries', quantity: 5 }
 
 findIndex 返回数组中第一个满足条件的元素的下标， 如果没有，则返回-1。
 
+```
+Arry.findIndex((item)=>{return xxx == xxx})  
+```
+
 同理find。
 
 
@@ -3551,6 +3587,8 @@ document.referrer 获取上一页的来源地址
 
 document.URL 获取当前页面地址。URL必须大写
 
+
+
 ### h5在只能在微信中打开的限制
 
 ```
@@ -3726,7 +3764,107 @@ https://mp.weixin.qq.com/s/d2zeGhUptGUGJpB5xHQbOA
 
 
 
+
+
+## 微信小程序
+
+### h5 拿到微信openid
+
+https://juejin.cn/post/6844903933844930574
+
+
+
+
+
+
+
+
+
 ## 其他
+
+### 获取元素的margin padding
+
+https://blog.csdn.net/qq_34595425/article/details/122591711
+
+https://blog.csdn.net/gypzp/article/details/103435383
+
+```
+let secDiv = document.querySelector('.sec');
+// 获取元素
+let secMargin = getComputedStyle(secDiv);
+// 可打印查看具体的值
+console.log(secMargin.marginBottom);
+// 打印出类名为sec的标签的margin-bottom的值
+```
+
+```
+getComputedStyle 和 style 异同
+
+getComputedStyle 和 element.style 的相同点就是二者返回的都是 CSSStyleDeclaration 对象，取相应属性值得时候都是采用的 CSS 驼峰式写法，均需要注意 float 属性。
+
+而不同点就是：
+element.style 读取的只是元素的内联样式，即写在元素的 style 属性上的样式；而 getComputedStyle 读取的样式是最终样式，包括了内联样式、嵌入样式和外部样式。
+
+element.style 既支持读也支持写，我们通过 element.style 即可改写元素的样式。而 getComputedStyle 仅支持读并不支持写入。我们可以通过使用 getComputedStyle 读取样式，通过 element.style 修改样式
+
+```
+
+
+
+### html2pdf
+
+https://juejin.cn/post/6914849268738031623
+
+转的时候字体坑-------应该是width/height的问题
+
+看官网文档有属性设置
+
+https://github.com/eKoopmans/html2pdf.js
+
+```
+设置Page-breaks 但是还是会有一些问题  分页的时候还有有一些会被隔断 不知道为什么
+```
+
+```
+this.$message({message: '下载中,稍后请在下载记录中查看文件...',type: 'success'});
+      let element = document.getElementById('pdf-body');
+			let filename = '成绩单-'+this.pdfObject.studentName+'.pdf';
+			let opt = {
+				filename,
+				image:{ type: 'jpeg', quality: 1 },
+				html2canvas:{ scale: 5 },
+				jsPDF:{ unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: 'avoid-all' }//分页换行不中断文字 https://github.com/eKoopmans/html2pdf.js
+			};
+			window.html2pdf(element, opt);
+```
+
+**794px\*1123px**  a4 大小
+
+
+
+### 不给用.?的语法糖  why
+
+应该是版本比较低，不支持es2020的链式语法，所以编译的时候需要安装一下babel用于解析链式语法
+
+```
+npm install --save-dev @babel/plugin-proposal-optional-chaining
+```
+
+```
+在babel.config.js 插入（没有这个文件可以手动创建）
+module.exports = {
+    presets: [
+      '@vue/app'
+    ],
+    //加上以下的代码就可以了
+    plugins:[
+      ["@babel/plugin-proposal-optional-chaining"]  //解析 可选链式语法
+    ]
+  }
+```
+
+
 
 ### qs   JSON 区别 
 
@@ -7188,3 +7326,50 @@ test 是目标文件  就是对哪一些文件是使用（use）哪一些loader
 # 坑
 
 写移动端就不要使用elementui   会有一些兼容的问题，ios兼容是真的麻烦。selector就是其一
+
+
+
+
+
+在template里面使用es6及以上的新语法，有时候会报错Syntax Error: Unexpected token就是因为vue的版本太低了。
+
+解决办法：要不换版本、要不就不适用?.这些新的语法
+
+
+
+好家伙  代码规范
+
+
+
+```
+		let weeks = []
+        let i = Number(cuurentWeek['beginDate'].split('-')[2]); <----注意这个;
+
+        ["1","2","3","4","5","6","7"].forEach(item =>{
+          weeks.push({week:item,date:i})
+          i++
+        })
+        
+```
+
+
+
+```
+		let weeks = []
+        let i = Number(cuurentWeek['beginDate'].split('-')[2])
+
+        ["1","2","3","4","5","6","7"].forEach(item =>{
+          weeks.push({week:item,date:i})
+          i++
+        })
+```
+
+
+
+没有了;就报错。
+
+
+
+
+
+使用dom.style.xxx设置属性，要注意给单位

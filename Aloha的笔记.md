@@ -5615,6 +5615,21 @@ https://tgideas.qq.com/doc/index.html
 ## 格式化时间格式
 
 ```
+dayjs().format() 
+// 默认返回的是 ISO8601 格式字符串 '2020-04-02T08:02:17-05:00'
+
+dayjs('2019-01-25').format('[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]') 
+// 'YYYYescape 2019-01-25T00:00:00-02:00Z'
+
+dayjs('2019-01-25').format("YYYY[年]MM[月]DD[日]") 
+// '2020年02月08日'
+
+dayjs('2019-01-25').format('DD/MM/YYYY') // '25/01/2019'
+```
+
+
+
+```
 把 yyyy-m-d  、 yyyy/m/d 转化为  yyyy-mm-dd
 formatTime(date) {
       //date 格式一般进来都是 yyyy-m-d   yyyy/m/d

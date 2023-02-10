@@ -421,7 +421,42 @@ splice导致遍历的元素发生了变化，但是前面两次都没有什么�
 router.push({ name: 'user', params: { username: 'eduardo' } })  注意name是配置路由的name，而不是路径，也只能使用name
 
 // 带查询参数，结果是 /register?plan=private
-router.push({ path: '/register', query: { plan: 'private' } }) 注意
+router.push({ path: '/register', query: { plan: 'private' } }) 注意vue.
+```
+
+
+
+#### vue.config.js
+
+BundleAnalyzerPlugin(Gzip打包)
+
+BundleAnalyzerPlugin分析打包的插件
+
+```
+// const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;//引用依赖分析插件
+const webpack = require('webpack')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const productionGzipExtensions = ['js', 'css']
+module.exports = {
+    // assetsDir:"static", //静态资源最终打包的目录
+    // publicPath: '/manager', //静态资源最终访问的前缀路径
+    configureWebpack: {
+        plugins: [
+            // new BundleAnalyzerPlugin(),
+            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new CompressionWebpackPlugin({
+                algorithm: 'gzip',
+                test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+                threshold: 10240,
+                minRatio: 0.8
+            }),
+            new webpack.optimize.LimitChunkCountPlugin({
+                maxChunks: 5,
+                minChunkSize: 100
+            })
+        ]
+    }
+};
 ```
 
 

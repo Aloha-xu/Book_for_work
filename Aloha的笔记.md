@@ -461,9 +461,17 @@ module.exports = {
 
 
 
+#### ：style 三目
+
+```
+:style="{'textDecoration' : type==1?'underline':''}"
+```
 
 
 
+#### 在data里面引用图片 需要require（’ @/xxxx‘）
+
+css url引入  background-image: url('../../assets/bg.png');
 
 
 
@@ -520,6 +528,28 @@ picker自定义数据的时候秒如果适合用设置setcoumvalue（x，{xxx:xx
 
 
 ### ElementUI
+
+
+
+#### element form 表单 校验 
+
+validateField对部分的表单进行校验
+
+```
+submitForm() {
+        const resArr = []
+        this.$refs.ruleForm.validateField(['pass', 'checkPass'],(valid) => {
+            resArr.push(valid)         
+        })
+        // 所有valid等於空字符串時通過校驗
+        if (resArr.every(v => v === '')) {
+            // 通過校驗後的操作
+            this.loading = true
+        }
+
+      },
+
+```
 
 
 
@@ -7423,3 +7453,33 @@ test 是目标文件  就是对哪一些文件是使用（use）哪一些loader
 
 
 使用dom.style.xxx设置属性，要注意给单位
+
+
+
+
+
+使用keep alive  并且传参是通过路由params传参，当back的时候，路由是没有params的，那么如果什么周期又用了activated，那么就会导致请求参数的一些参数是没有的。
+
+解决办法就是判断是上一个路由回来的，那么就不触发activated里面的方法，写个return。
+
+使用路由内置守卫
+
+```
+beforeRouteEnter (to, from, next) {
+    next(vm => {
+      console.log(from, 'from')
+      vm.fromPath = from.path  //获取上一级路由的路径
+    })
+  },
+activated() {
+    if(this.fromPath === '/signHistoryList'){
+      return 
+    }
+  },
+```
+
+
+
+
+
+keep alive 里面的组件的生命周期是，第一次是created、mounted、activated。再次就activated
